@@ -1,21 +1,9 @@
-import React, { useState } from "react";
 import "./App.css";
-
-//interface
-import { ErrorProductContextData } from "src/contexts/ErrorProductContext";
 
 //components
 import { UpdateProducts } from "src/components/UpdateProducts";
 
-import {
-  ChakraProvider,
-  extendTheme,
-  ThemeConfig,
-  LightMode,
-} from "@chakra-ui/react";
-
-// //contexts
-// import { ErrorProductContext } from "src/contexts/ErrorProductContext";
+import { ChakraProvider, extendTheme, ThemeConfig } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -26,9 +14,7 @@ const theme = extendTheme({ config });
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <LightMode>
-        <UpdateProducts />
-      </LightMode>
+      <UpdateProducts />
     </ChakraProvider>
   );
 }

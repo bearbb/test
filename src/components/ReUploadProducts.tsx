@@ -1,11 +1,16 @@
 import React from "react";
 
-import { Button, Box, Flex, Image, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Box,
+  Flex,
+  Image,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
-import styled from "@emotion/styled";
 
 import {
-  UpdatedProductContext,
   useUpdatedProductContext,
   UpdatedProductsData,
 } from "src/contexts/UpdatedProductContext";
@@ -15,7 +20,7 @@ import {
 } from "src/contexts/ColorOptionsContext";
 
 export const ReUploadProducts = ({ toggleOff }: { toggleOff: () => void }) => {
-  const { updatedProducts, setUpdatedProducts } = useUpdatedProductContext();
+  const { updatedProducts } = useUpdatedProductContext();
   const { colorOptions } = useColorOptionsContext();
   console.log(updatedProducts);
   return (
@@ -30,11 +35,13 @@ export const ReUploadProducts = ({ toggleOff }: { toggleOff: () => void }) => {
       // backdropFilter="blur(2px)"
       onClick={toggleOff}
     >
-      <Box w="50%" h="70%" bgColor="white">
+      <Box w="50%" h="70%" bgColor={useColorModeValue("white", "gray.800")}>
         <Flex
-          h="15%"
+          h="10%"
           justifyContent="space-between"
-          p={6}
+          alignItems="center"
+          pl={6}
+          pr={6}
           borderBottom="1px solid #EDF2F7"
         >
           <Text fontSize="xl" fontWeight="semibold">
@@ -42,7 +49,7 @@ export const ReUploadProducts = ({ toggleOff }: { toggleOff: () => void }) => {
           </Text>
           <CloseIcon onClick={toggleOff} cursor="pointer" />
         </Flex>
-        <Box overflowY="auto" h="70%">
+        <Box overflowY="auto" h="80%">
           {updatedProducts.map((p) => (
             <ReUploadProduct
               key={p.id}
@@ -55,7 +62,7 @@ export const ReUploadProducts = ({ toggleOff }: { toggleOff: () => void }) => {
             />
           ))}
         </Box>
-        <Box h="15%" bottom={0} borderTop="1px solid #EDF2F7">
+        <Box h="10%" bottom={0} borderTop="1px solid #EDF2F7">
           <Flex
             w="100%"
             h="100%"
@@ -78,13 +85,6 @@ export const ReUploadProducts = ({ toggleOff }: { toggleOff: () => void }) => {
     </Flex>
   );
 };
-
-const RedText = styled("span")`
-  color: #f56565;
-`;
-const BlackText = styled("span")`
-  color: #2d3748;
-`;
 
 interface ReUploadProductProps extends UpdatedProductsData {
   colorOptions: ColorOption[];
@@ -109,18 +109,18 @@ const ReUploadProduct = ({
       </Box>
       <Box w="60%">
         <Text fontWeight="semibold">{name}</Text>
-        <p>
+        <Text>
           <label>ID: </label>
           {id}
-        </p>
-        <p>
+        </Text>
+        <Text>
           <label>SKU: </label>
           <span style={{ color: "#f56565" }}>{sku}</span>
-        </p>
-        <p>
+        </Text>
+        <Text>
           <label>Color: </label>
-          <span style={{ color: "#2d3748" }}>{colorInString}</span>
-        </p>
+          <span style={{ fontWeight: "bold" }}>{colorInString}</span>
+        </Text>
       </Box>
     </Flex>
   );

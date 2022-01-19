@@ -16,9 +16,8 @@ import {
 
 import { ProductDetailData } from "src/contexts/ErrorProductContext";
 
-import { Flex, Tr, Td, Image, Select, Input } from "@chakra-ui/react";
+import { Box, Flex, Tr, Td, Image, Select, Input } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
-import { css } from "@emotion/react";
 import { useUpdatedProductContext } from "src/contexts/UpdatedProductContext";
 
 interface ProductDetailProps extends ProductDetailData {
@@ -36,7 +35,7 @@ export const ProductDetail = ({
 }: ProductDetailProps) => {
   const { colorOptions } = useColorOptionsContext();
   const { updatedProducts, setUpdatedProducts } = useUpdatedProductContext();
-  const { errorProductsData, setErrorProductsData } = useErrorProductContext();
+  const { errorProductsData } = useErrorProductContext();
   const [productName, setProductName] = useState<string>(name);
   const [isProductNameValid, setIsProductNameValid] = useState(true);
   const productNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,6 +117,8 @@ export const ProductDetail = ({
       } else {
         setIsSubmitAble(false);
       }
+    } else {
+      setIsSubmitAble(false);
     }
 
     return () => {};
@@ -147,7 +148,7 @@ export const ProductDetail = ({
         <Image w="200px" src={image}></Image>
       </Td>
       <Td>
-        <Flex alignItems="center" gap={3}>
+        <Flex alignItems="center">
           <Input
             focusBorderColor={isProductNameValid ? "blue.500" : "red.500"}
             borderColor={isProductNameValid ? "white" : "red.500"}
@@ -155,8 +156,11 @@ export const ProductDetail = ({
             onChange={(e) => {
               productNameHandler(e);
             }}
+            w="70%"
           ></Input>
-          {isPNameEdited ? <EditIcon color="orange.500" /> : null}
+          <Box w="15%" h="100%" ml={3}>
+            {isPNameEdited ? <EditIcon color="orange.500" /> : null}
+          </Box>
         </Flex>
       </Td>
       <Td>

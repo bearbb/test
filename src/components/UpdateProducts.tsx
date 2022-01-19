@@ -13,6 +13,7 @@ import { ErrorProductContext } from "src/contexts/ErrorProductContext";
 import axios from "axios";
 import { Heading } from "@chakra-ui/layout";
 import {
+  Spinner,
   Button,
   Flex,
   Box,
@@ -22,6 +23,7 @@ import {
   Tr,
   Th,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import { ProductDetail } from "src/components/ProductDetail";
@@ -61,15 +63,19 @@ export const UpdateProducts = () => {
     return () => {};
   }, [updatedProducts]);
 
+  const [isLoading, setIsLoading] = useState(false);
   //get all error product details on load
   useEffect(() => {
     const updateErrorProducts = async () => {
       try {
+        setIsLoading(true);
         const { data } = await axios.get(
           "https://hiring-test.stag.tekoapis.net/api/products"
         );
+        setIsLoading(false);
         setErrorProductsData(data);
       } catch (err) {
+        setIsLoading(false);
         setError("Something went wrong, please try again");
       }
     };
@@ -87,6 +93,7 @@ export const UpdateProducts = () => {
     updateColorOptions();
     return () => {};
   }, []);
+  const toast = useToast();
 
   return (
     <Box>
@@ -100,31 +107,42 @@ export const UpdateProducts = () => {
             value={{ colorOptions, setColorOptions }}
           >
             {togglePopover ? <ReUploadProducts toggleOff={toggleOff} /> : null}
-            <Box p={8}>
-              <Flex justifyContent="space-between" mt={5} mb={4}>
-                <Heading as="h1" fontSize="2xl">
-                  Jason - Re-upload Error Products
-                </Heading>
-              </Flex>
-              <PaginatedProductsDetail
-                productsPerPage={10}
-                productsDetail={errorProductsData}
-                setIsSubmitAble={setIsSubmitAble}
-              ></PaginatedProductsDetail>
+            {isLoading ? (
+              <Spinner size="lg" />
+            ) : (
+              <Box p={8}>
+                <Flex justifyContent="space-between" mt={5} mb={4}>
+                  <Heading as="h1" fontSize="2xl">
+                    Jason - Re-upload Error Products
+                  </Heading>
+                </Flex>
+                <PaginatedProductsDetail
+                  productsPerPage={10}
+                  productsDetail={errorProductsData}
+                  setIsSubmitAble={setIsSubmitAble}
+                ></PaginatedProductsDetail>
 
-              <Box position="fixed" bottom={8} right={8}>
-                <Button
-                  leftIcon={<CheckIcon />}
-                  colorScheme="blue"
-                  isDisabled={!isSubmitAble}
-                  onClick={() => {
-                    toggleOn();
-                  }}
-                >
-                  Submit
-                </Button>
+                <Box position="fixed" bottom={8} right={8}>
+                  <Button
+                    leftIcon={<CheckIcon />}
+                    colorScheme="blue"
+                    isDisabled={!isSubmitAble}
+                    onClick={() => {
+                      if (updatedProducts.length === 0) {
+                        toast({
+                          status: "error",
+                          description: "Nothing was changes",
+                        });
+                      } else {
+                        toggleOn();
+                      }
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Box>
               </Box>
-            </Box>
+            )}
           </ColorOptionsContext.Provider>
         </UpdatedProductContext.Provider>
       </ErrorProductContext.Provider>

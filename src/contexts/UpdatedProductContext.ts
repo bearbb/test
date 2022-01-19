@@ -1,6 +1,5 @@
 import { useContext, createContext } from "react";
 
-import { ProductDetailData } from "src/contexts/ErrorProductContext";
 export interface UpdatedProductsData {
   id: number;
   name: string;
