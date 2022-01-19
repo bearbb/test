@@ -16,7 +16,16 @@ import {
 
 import { ProductDetailData } from "src/contexts/ErrorProductContext";
 
-import { Box, Flex, Tr, Td, Image, Select, Input } from "@chakra-ui/react";
+import {
+  Text,
+  Box,
+  Flex,
+  Tr,
+  Td,
+  Image,
+  Select,
+  Input,
+} from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 import { useUpdatedProductContext } from "src/contexts/UpdatedProductContext";
 
@@ -38,6 +47,8 @@ export const ProductDetail = ({
   const { errorProductsData } = useErrorProductContext();
   const [productName, setProductName] = useState<string>(name);
   const [isProductNameValid, setIsProductNameValid] = useState(true);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [skuError, setSkuError] = useState<string | null>(null);
   const productNameHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     //max length 50 character
     if (e.target.value.length <= 50) {
@@ -48,8 +59,14 @@ export const ProductDetail = ({
     // console.log(productName);
     if (productName === "") {
       setIsProductNameValid(false);
+      setNameError("Product name shouldn't be empty");
     } else {
-      setIsProductNameValid(true);
+      if (productName.length > 50) {
+        setNameError("Product name shouldn't be longer than 50 character");
+      } else {
+        setNameError(null);
+        setIsProductNameValid(true);
+      }
     }
     return () => {};
   }, [productName]);
@@ -63,8 +80,14 @@ export const ProductDetail = ({
   useEffect(() => {
     if (productSku === "") {
       setIsProductSkuValid(false);
+      setSkuError("SKU shouldn't be empty");
     } else {
-      setIsProductSkuValid(true);
+      if (productSku.length > 20) {
+        setSkuError("SKU shouldn't be longer than 20 character");
+      } else {
+        setIsProductSkuValid(true);
+        setSkuError(null);
+      }
     }
   }, [productSku]);
   const [productColor, setProductColor] = useState(color);
@@ -148,7 +171,7 @@ export const ProductDetail = ({
         <Image w="200px" src={image}></Image>
       </Td>
       <Td>
-        <Flex alignItems="center">
+        <Flex alignItems="center" flexDir="column" gap={3}>
           <Input
             focusBorderColor={isProductNameValid ? "blue.500" : "red.500"}
             borderColor={isProductNameValid ? "white" : "red.500"}
@@ -158,13 +181,14 @@ export const ProductDetail = ({
             }}
             w="70%"
           ></Input>
-          <Box w="15%" h="100%" ml={3}>
+          <Text color="red.300">{nameError}</Text>
+          {/* <Box w="15%" h="100%" ml={3}>
             {isPNameEdited ? <EditIcon color="orange.500" /> : null}
-          </Box>
+          </Box> */}
         </Flex>
       </Td>
       <Td>
-        <Flex alignItems="center" gap={3}>
+        <Flex alignItems="center" flexDir="column" gap={3}>
           <Input
             focusBorderColor={isProductSkuValid ? "blue.500" : "red.500"}
             borderColor={isProductSkuValid ? "white" : "red.500"}
@@ -173,7 +197,8 @@ export const ProductDetail = ({
               productSkuHandler(e);
             }}
           ></Input>
-          {isPSkuEdited ? <EditIcon color="orange.500" /> : null}
+          <Text color="red.300">{skuError}</Text>
+          {/* {isPSkuEdited ? <EditIcon color="orange.500" /> : null} */}
         </Flex>
       </Td>
       <Td>
