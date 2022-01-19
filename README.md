@@ -2,6 +2,8 @@
 ## Run script below to start the project
 In the project directory, you can run:
 
+### `yarn install`
+Then run
 ### `yarn start`
 
 Runs the app in the development mode.\
